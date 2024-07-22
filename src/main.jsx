@@ -8,6 +8,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Register from './Register.jsx'
 import Login from './Login.jsx'
 import BlogHome from './BlogHome.jsx';
+import BlogEditor from './BlogEditor.jsx';
 
 // Create a new QueryClient instance
 const queryClient = new QueryClient();
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: '/about',
         element: <h1>About Us</h1>, // About Us page
+      },
+      {
+        path: '/blog-editor',
+        element:<BlogEditor/>
       },
     ] // Main component
   },

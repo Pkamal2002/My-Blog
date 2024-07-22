@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -9,6 +10,8 @@ const Register = () => {
         email: '',
         password: ''
     });
+
+    const navigate = useNavigate();
 
     const mutation = useMutation({
         mutationFn: async (userData) => {
@@ -22,6 +25,7 @@ const Register = () => {
         onSuccess: (data) => {
             toast.success('Registration successful!');
             console.log('Registration successful:', data);
+            navigate("/login");
         },
     });
 

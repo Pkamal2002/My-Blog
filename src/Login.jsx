@@ -25,7 +25,7 @@ const Login = () => {
       console.log("Login successful:", data);
       localStorage.setItem("token", data.token);
       toast.success("Login successful!");
-      navigate("/about");
+      navigate("/blog-editor");
     },
     onError: (error) => {
       toast.error(

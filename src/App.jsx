@@ -1,13 +1,12 @@
-import { Link } from "react-router-dom"
+// import { Link } from "react-router-dom"
+import Layout from "./Layout"
 
 function App() {
 
 
   return (
   <>
-  <Link to={"/register"}>Register</Link>
-  <Link to={"/login"}>Login</Link>
-  <Link to={"/about"}>About</Link>
+  <Layout/>
   </>
   )
 }

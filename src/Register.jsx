@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -15,9 +16,11 @@ const Register = () => {
             return response.data;
         },
         onError: (error) => {
+            toast.error(error.response?.data?.message || error.message);
             console.error('Registration failed:', error);
         },
         onSuccess: (data) => {
+            toast.success('Registration successful!');
             console.log('Registration successful:', data);
         },
     });
@@ -32,11 +35,16 @@ const Register = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        mutation.mutate(formData);
+        const loadingToastId = toast.loading('Processing...');
+        mutation.mutate(formData, {
+            onSettled: () => {
+                toast.dismiss(loadingToastId);
+            }
+        });
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
             <div className="bg-white p-8 rounded-lg shadow-lg w-96">
                 <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -84,6 +92,7 @@ const Register = () => {
                         Register
                     </button>
                 </form>
+                <Toaster position="top-right" reverseOrder={false} />
                 {mutation.isLoading && <p className="text-center text-blue-500">Processing...</p>}
                 {mutation.isError && <p className="text-center text-red-500">Error: {mutation.error.response?.data?.message || mutation.error.message}</p>}
                 {mutation.isSuccess && <p className="text-center text-green-500">Registration successful!</p>}

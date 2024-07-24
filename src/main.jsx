@@ -13,7 +13,7 @@ import OtpVerification from './OtpVerification.jsx';
 import AboutUs from './AboutUs.jsx';
 
 // Create a new QueryClient instance
-const queryClient = new QueryClient();
+// const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -52,6 +52,14 @@ const router = createBrowserRouter([
     element: <h1>Page not found</h1>, // 404 page
   }
 ]);
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+      queries: {
+          staleTime: 10000,
+      },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

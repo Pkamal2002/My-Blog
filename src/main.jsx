@@ -1,20 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
+// index.jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+import './index.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Register from './Register.jsx'
-import Login from './Login.jsx'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AuthProvider } from './AuthContext';
+import PrivateRoute from './PrivateRoute';
+import Register from './Register.jsx';
+import Login from './Login.jsx';
 import BlogHome from './BlogHome.jsx';
 import BlogEditor from './BlogEditor.jsx';
 import OtpVerification from './OtpVerification.jsx';
 import AboutUs from './AboutUs.jsx';
 import BlogDetail from './BlogDetail.jsx';
-
-// Create a new QueryClient instance
-// const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -23,53 +23,54 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <BlogHome/>, // Register component
+        element: <BlogHome />,
       },
       {
         path: '/blogs/:id',
-        element: <BlogDetail/>, // Register component
+        element: <BlogDetail />,
       },
       {
         path: '/register',
-        element: <Register/>, // Register component
+        element: <Register />,
       },
       {
         path: '/verify',
-        element: <OtpVerification/>, // Register component
+        element: <OtpVerification />,
       },
       {
         path: '/login',
-        element: <Login />, // Login component
+        element: <Login />,
       },
       {
         path: '/about',
-        element: <AboutUs/>, // About Us page
+        element: <AboutUs />,
       },
       {
         path: '/blog-editor',
-        element:<BlogEditor/>
+        element: <PrivateRoute element={<BlogEditor />} />,
       },
-    ] // Main component
+    ],
   },
-  
   {
     path: '*',
-    element: <h1>Page not found</h1>, // 404 page
-  }
+    element: <h1>Page not found</h1>,
+  },
 ]);
 
 const queryClient = new QueryClient({
   defaultOptions: {
-      queries: {
-          staleTime: 10000,
-      },
+    queries: {
+      staleTime: 10000,
+    },
   },
 });
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  </React.StrictMode>,
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </AuthProvider>
+  </React.StrictMode>
 );

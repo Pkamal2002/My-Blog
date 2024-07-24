@@ -16,14 +16,19 @@ const Login = () => {
   const mutation = useMutation({
     mutationFn: async (userData) => {
       const response = await axios.post(
-        "https://api.freeapi.app/api/v1/users/login",
+        "https://prafullblog.site/api/v1/users/login",
         userData
       );
+      // console.log("Response data:", response.data.data.accessToken);
       return response.data;
+      
     },
+    
     onSuccess: (data) => {
-      console.log("Login successful:", data);
-      localStorage.setItem("token", data.token);
+      // console.log("Login successful:", data);
+      localStorage.setItem("token", data.data.accessToken);
+      // console.log("Token stored:", localStorage.getItem("token"));
+      // console.log("Token is:",data.token)
       toast.success("Login successful!");
       navigate("/blog-editor");
     },
@@ -34,6 +39,7 @@ const Login = () => {
       console.error("Login failed:", error);
     },
   });
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,12 +54,12 @@ const Login = () => {
         toast.dismiss(loadingToastId);
       },
     });
-    console.log(
-      "Form submitted with email:",
-      formData.email,
-      "and password:",
-      formData.password
-    );
+    // console.log(
+    //   "Form submitted with email:",
+    //   formData.email,
+    //   "and password:",
+    //   formData.password
+    // );
   };
 
   return (

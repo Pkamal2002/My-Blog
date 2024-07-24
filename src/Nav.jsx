@@ -1,12 +1,42 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // console.log('Token found:', token);
+        // eslint-disable-next-line no-unused-vars
+        const response = await axios.post('https://prafullblog.site/api/v1/users/logout', {}, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        // console.log('Logout response:', response);
+        localStorage.removeItem('token');
+        toast.success('Logged out successfully!');
+        navigate('/login');
+      } else {
+        toast.error('You are not logged in');
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+      toast.error(error.response?.data?.message || 'Failed to log out. Please try again.');
+    }
+  };
+  
+  
+  
 
   return (
     <nav className="bg-white shadow-md">
@@ -16,7 +46,7 @@ const Nav = () => {
             <div className="flex-shrink-0 flex items-center">
               <Link to="/">
                 <img
-                  className="h-10  w-10 rounded-full"
+                  className="h-10 w-10 rounded-full"
                   src="https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg?auto=compress&cs=tinysrgb&w=600"
                   alt="Logo"
                 />
@@ -50,6 +80,12 @@ const Nav = () => {
             >
               Register
             </Link>
+            <button
+              onClick={handleLogout}
+              className="ml-4 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium hover:border-blue-500 hover:text-gray-700"
+            >
+              Logout
+            </button>
           </div>
           <div className="-mr-2 flex items-center sm:hidden">
             <button
@@ -112,6 +148,12 @@ const Nav = () => {
             >
               Register
             </Link>
+            <button
+              onClick={handleLogout}
+              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+            >
+              Logout
+            </button>
           </div>
         </div>
       )}

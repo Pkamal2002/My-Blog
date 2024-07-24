@@ -9,6 +9,7 @@ import Register from './Register.jsx'
 import Login from './Login.jsx'
 import BlogHome from './BlogHome.jsx';
 import BlogEditor from './BlogEditor.jsx';
+import OtpVerification from './OtpVerification.jsx';
 
 // Create a new QueryClient instance
 const queryClient = new QueryClient();
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/register',
-        element: <Register />, // Register component
+        element: <Register/>, // Register component
+      },
+      {
+        path: '/verify',
+        element: <OtpVerification/>, // Register component
       },
       {
         path: '/login',

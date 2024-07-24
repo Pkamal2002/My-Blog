@@ -11,6 +11,7 @@ import BlogHome from './BlogHome.jsx';
 import BlogEditor from './BlogEditor.jsx';
 import OtpVerification from './OtpVerification.jsx';
 import AboutUs from './AboutUs.jsx';
+import BlogDetail from './BlogDetail.jsx';
 
 // Create a new QueryClient instance
 // const queryClient = new QueryClient();
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <BlogHome/>, // Register component
+      },
+      {
+        path: '/blogs/:id',
+        element: <BlogDetail/>, // Register component
       },
       {
         path: '/register',

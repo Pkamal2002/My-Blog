@@ -1,47 +1,74 @@
+// BlogHome.js
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
+const fetchBlogs = async () => {
+  const response = await fetch(
+    "https://prafullblog.site/api/v1/blogs/getAllBlogs"
+  );
+  const data = await response.json();
+  if (response.ok) {
+    return data.data; // Adjusted to match the "data" field in your API response
+  } else {
+    throw new Error(data.message || "Failed to fetch blogs");
+  }
+};
+
 const BlogHome = () => {
-  const posts = [
-    {
-      id: 1,
-      title: "How to Learn JavaScript",
-      excerpt:
-        "JavaScript is a versatile language that can be used for both front-end and back-end development...",
-      date: "July 22, 2024",
-      author: "John Doe",
-    },
-    {
-      id: 2,
-      title: "Understanding React Hooks",
-      excerpt:
-        "React Hooks are functions that let you use state and other React features without writing a class...",
-      date: "July 20, 2024",
-      author: "Jane Smith",
-    },
-    // Add more posts as needed
-  ];
+  const {
+    isLoading,
+    error,
+    data: blogs,
+  } = useQuery({
+    queryKey: ["blogs"],
+    queryFn: fetchBlogs,
+  });
+
+  if (isLoading) {
+    return <h3>Loading...</h3>;
+  }
+
+  if (error) {
+    return <h3>Error: {error.message}</h3>;
+  }
 
   return (
-    <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Latest Posts</h1>
-      <div className="grid gap-8 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
-        {posts.map((post) => (
-          <div key={post.id} className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              {post.title}
-            </h2>
-            <p className="text-gray-600 mb-4">{post.excerpt}</p>
-            <p className="text-gray-500 text-sm">
-              {post.date} by {post.author}
-            </p>
-            <Link
-              to={`/post/${post.id}`}
-              className="text-blue-500 hover:underline"
-            >
-              Read more
-            </Link>
-          </div>
-        ))}
+    <div className="bg-white max-h-fit">
+      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 min-h-screen">
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+          Blog Posts:
+        </h2>
+
+        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+          {blogs.map((blog) => (
+            <div key={blog._id} className="group relative">
+              <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                <img
+                  src={blog.image}
+                  alt={blog.title}
+                  className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+                />
+              </div>
+              <div className="mt-4 flex justify-between">
+                <div>
+                  <h3 className="text-sm text-gray-700">
+                    <Link to={`/blogs/${blog._id}`}>
+                      <span aria-hidden="true" className="absolute inset-0" />
+                      {blog.title}
+                    </Link>
+                  </h3>
+                  <div
+                    className="mt-1 text-sm text-gray-500"
+                    dangerouslySetInnerHTML={{ __html: blog.content }}
+                  />
+                </div>
+                <p className="text-sm font-medium text-gray-900">
+                  {new Date(blog.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

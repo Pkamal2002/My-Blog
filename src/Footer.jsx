@@ -15,7 +15,7 @@ const Footer = () => {
             </Link>
           </div>
           <div className="w-full sm:w-auto mb-4 sm:mb-0">
-            <nav className="flex space-x-4">
+            <nav className="flex space-x-3 p-2">
               <Link to="/" className="text-gray-400 hover:text-gray-200">
                 Home
               </Link>
@@ -75,7 +75,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-8 text-center text-gray-400">
-          &copy; {new Date().getFullYear()} Kamal & Com. All rights reserved.
+          &copy; {new Date().getFullYear()} Developer : Prafull Kamal. <br /> All rights reserved.
         </div>
       </div>
     </footer>

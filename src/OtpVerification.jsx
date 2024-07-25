@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
@@ -6,28 +6,15 @@ import { useNavigate } from "react-router-dom";
 
 const OtpVerification = () => {
   const [otp, setOtp] = useState("");
-  const [email, setEmail] = useState(""); // Email state
   const [isResending, setIsResending] = useState(false);
 
   const navigate = useNavigate();
 
-  // Fetch email from local storage when the component mounts
-  useEffect(() => {
-    const savedEmail = localStorage.getItem("email");
-    if (savedEmail) {
-      setEmail(savedEmail);
-    } else {
-      // Handle case where email is not found
-      toast.error("Email not found. Please register again.");
-      navigate("/registration"); // Redirect to registration page or show an error
-    }
-  }, [navigate]);
-
   const verifyOtpMutation = useMutation({
-    mutationFn: async (otpData) => {
+    mutationFn: async (otp) => {
       const response = await axios.post(
         "https://prafullblog.site/api/v1/users/verify", // Replace with your actual API endpoint
-        otpData
+        { otp }
       );
       return response.data;
     },
@@ -45,10 +32,9 @@ const OtpVerification = () => {
   });
 
   const resendOtpMutation = useMutation({
-    mutationFn: async (email) => {
+    mutationFn: async () => {
       const response = await axios.post(
-        "https://prafullblog.site/api/v1/users/send-otp", // Replace with your actual API endpoint
-        { email }
+        "https://prafullblog.site/api/v1/users/send-otp" // Replace with your actual API endpoint
       );
       return response.data;
     },
@@ -68,7 +54,7 @@ const OtpVerification = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const loadingToastId = toast.loading("Verifying OTP...");
-    verifyOtpMutation.mutate({ otp, email }, {
+    verifyOtpMutation.mutate(otp, {
       onSettled: () => {
         toast.dismiss(loadingToastId);
       },
@@ -77,7 +63,7 @@ const OtpVerification = () => {
 
   const handleResendOtp = () => {
     setIsResending(true);
-    resendOtpMutation.mutate(email);
+    resendOtpMutation.mutate();
   };
 
   return (

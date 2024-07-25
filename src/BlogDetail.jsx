@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from 'axios';
+import Loading from "./Loading";
 
 const fetchBlog = async (id) => {
   try {
@@ -33,7 +34,7 @@ const BlogDetail = () => {
   }, [id]);
 
   if (isLoading) {
-    return <h3 className="text-center text-xl">Loading...</h3>;
+    return (<Loading/>);
   }
 
   if (error) {

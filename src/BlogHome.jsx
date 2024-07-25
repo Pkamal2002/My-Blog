@@ -1,6 +1,7 @@
 // BlogHome.js
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import Loading from "./Loading";
 
 const fetchBlogs = async () => {
   const response = await fetch(
@@ -25,7 +26,7 @@ const BlogHome = () => {
   });
 
   if (isLoading) {
-    return <h3>Loading...</h3>;
+    return (<Loading/>);
   }
 
   if (error) {

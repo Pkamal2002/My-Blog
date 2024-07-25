@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ const Login = () => {
     password: "",
     rememberMe: false,
   });
+
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const navigate = useNavigate();
 
@@ -19,27 +22,22 @@ const Login = () => {
         "https://prafullblog.site/api/v1/users/login",
         userData
       );
-      // console.log("Response data:", response.data.data.accessToken);
       return response.data;
-      
     },
-    
     onSuccess: (data) => {
-      // console.log("Login successful:", data);
       localStorage.setItem("token", data.data.accessToken);
-      // console.log("Token stored:", localStorage.getItem("token"));
-      // console.log("Token is:",data.token)
       toast.success("Login successful!");
       navigate("/blog-editor");
     },
     onError: (error) => {
       toast.error(
-        error.response?.data?.message || "Login failed. Please try again."
+       error.message || "Login failed. Please try again."
+        
+        
       );
-      console.error("Login failed:", error);
+      console.log(error)
     },
   });
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,12 +52,6 @@ const Login = () => {
         toast.dismiss(loadingToastId);
       },
     });
-    // console.log(
-    //   "Form submitted with email:",
-    //   formData.email,
-    //   "and password:",
-    //   formData.password
-    // );
   };
 
   return (
@@ -81,12 +73,12 @@ const Login = () => {
               required
             />
           </div>
-          <div>
+          <div className="relative">
             <label className="block mb-1 text-gray-600" htmlFor="password">
               Password
             </label>
             <input
-              type="password"
+              type={passwordVisible ? "text" : "password"}
               id="password"
               name="password"
               value={formData.password}
@@ -94,6 +86,12 @@ const Login = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-300"
               required
             />
+            <span
+              onClick={() => setPasswordVisible(!passwordVisible)}
+              className="absolute right-3 top-10 cursor-pointer"
+            >
+              {passwordVisible ? <AiFillEyeInvisible /> : <AiFillEye />}
+            </span>
           </div>
           <div className="flex items-center">
             <input
@@ -128,7 +126,8 @@ const Login = () => {
         {mutation.isError && (
           <p className="text-center text-red-500">
             Error:{" "}
-            {mutation.error.response?.data?.message || mutation.error.message}
+            {/* {mutation.error.response?.data?.message || mutation.error.message} */}
+            {"Invalid User and Password"}
           </p>
         )}
         {mutation.isSuccess && (

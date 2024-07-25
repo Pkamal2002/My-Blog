@@ -24,9 +24,25 @@ const OtpVerification = () => {
       navigate("/login");
     },
     onError: (error) => {
-      toast.error(
-        error.response?.data?.message || "OTP verification failed. Please try again."
-      );
+      let errorMessage = "OTP verification failed. Please try again.";
+
+      if (error.response) {
+        const html = error.response.data;
+        // Parse the HTML to extract the error message
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const errorElement = doc.querySelector("pre");
+        if (errorElement) {
+          const textContent = errorElement.textContent;
+          // Find the line starting with "Error:" and ignore everything else
+          const match = textContent.match(/Error: (.+)/);
+          if (match) {
+            errorMessage = match[1];
+          }
+        }
+      }
+
+      toast.error(errorMessage);
       console.error("OTP verification failed:", error);
     },
   });
@@ -43,11 +59,27 @@ const OtpVerification = () => {
       setIsResending(false);
     },
     onError: (error) => {
-      toast.error(
-        error.response?.data?.message || "Failed to resend OTP. Please try again."
-      );
-      console.error("Failed to resend OTP:", error);
-      setIsResending(false);
+      let errorMessage = "Failed to resend OTP. Please try again.";
+
+      if (error.response) {
+        const html = error.response.data;
+        // Parse the HTML to extract the error message
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const errorElement = doc.querySelector("pre");
+        if (errorElement) {
+          const textContent = errorElement.textContent;
+          // Find the line starting with "Error:" and ignore everything else
+          const match = textContent.match(/Error: (.+email)/);
+          if (match) {
+            errorMessage = match[0];
+          }
+        }
+      }
+
+      toast.error(errorMessage);
+      console.error("Registration failed:", error);
+      // setIsResending(false);
     },
   });
 
@@ -69,7 +101,9 @@ const OtpVerification = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h2 className="text-2xl font-bold mb-6 text-center">OTP Verification</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          OTP Verification
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block mb-1 text-gray-600" htmlFor="otp">
@@ -109,11 +143,15 @@ const OtpVerification = () => {
         )}
         {verifyOtpMutation.isError && (
           <p className="text-center text-red-500">
-            Error: {verifyOtpMutation.error.response?.data?.message || verifyOtpMutation.error.message}
+            Error:{" "}
+            {verifyOtpMutation.error.response?.data?.message ||
+              verifyOtpMutation.error.message}
           </p>
         )}
         {verifyOtpMutation.isSuccess && (
-          <p className="text-center text-green-500">OTP verified successfully!</p>
+          <p className="text-center text-green-500">
+            OTP verified successfully!
+          </p>
         )}
       </div>
     </div>

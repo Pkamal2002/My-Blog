@@ -45,7 +45,7 @@ const BlogDetail = () => {
       <h1 className="text-2xl md:text-3xl font-bold mb-4">{blog.title}</h1>
       <img src={blog.image} alt={blog.title} className="w-full h-auto mb-4" />
       <div className="prose prose-sm md:prose-lg" dangerouslySetInnerHTML={{ __html: blog.content }} />
-      <p className="text-gray-600 mt-4">Written by User ID: {blog.writter}</p>
+      <p className="text-gray-600 mt-4">Written by: {blog.writter}</p>
       <p className="text-gray-600">{new Date(blog.createdAt).toLocaleDateString()}</p>
     </div>
   );

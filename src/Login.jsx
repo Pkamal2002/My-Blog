@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import UserContext from "./context/UserContext";
+import { useAuth } from "./context/AuthContext";
 
 const Login = () => {
+  const { setUser } = useContext(UserContext);
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -27,15 +31,15 @@ const Login = () => {
     onSuccess: (data) => {
       localStorage.setItem("token", data.data.accessToken);
       toast.success("Login successful!");
+      setUser({ username: data.data.username });
+      login(); // Update the authentication state
       navigate("/blog-editor");
     },
     onError: (error) => {
       toast.error(
-       error.message || "Login failed. Please try again."
-        
-        
+        error.message || "Login failed. Please try again."
       );
-      console.log(error)
+      console.log(error);
     },
   });
 
@@ -125,9 +129,7 @@ const Login = () => {
         )}
         {mutation.isError && (
           <p className="text-center text-red-500">
-            Error:{" "}
-            {/* {mutation.error.response?.data?.message || mutation.error.message} */}
-            {"Invalid User and Password"}
+            Error: Invalid User and Password
           </p>
         )}
         {mutation.isSuccess && (

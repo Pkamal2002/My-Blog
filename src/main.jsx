@@ -1,4 +1,3 @@
-// index.jsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
@@ -6,8 +5,8 @@ import './index.css';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { AuthProvider } from './AuthContext';
-// import PrivateRoute from './PrivateRoute';
+import { AuthProvider } from './context/AuthContext.jsx';
+import PrivateRoute from './PrivateRoute';
 import Register from './Register.jsx';
 import Login from './Login.jsx';
 import BlogHome from './BlogHome.jsx';
@@ -47,8 +46,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/blog-editor',
-        // element: <PrivateRoute element={<BlogEditor />} />,
-        element: <BlogEditor />,
+        element: <PrivateRoute element={<BlogEditor />} />,
       },
     ],
   },

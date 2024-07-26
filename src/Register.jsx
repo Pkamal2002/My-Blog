@@ -100,7 +100,7 @@ const Register = () => {
       errorMsg = "Full Name is required.";
     } else if (
       name === "password" &&
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/.test(
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$#!%*?&])[A-Za-z\d#@$!%*?&]{6,}$/.test(
         value
       )
     ) {

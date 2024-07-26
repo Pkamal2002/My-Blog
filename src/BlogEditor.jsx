@@ -106,7 +106,7 @@ const BlogEditor = () => {
         </div>
         <div>
           <label className="block text-gray-700 mb-2" htmlFor="image">
-            Upload Image<span className=" text-red-500 text-sm font-[600]">(less then 2mb.)</span>
+            Upload Image<span className=" text-red-500 text-sm font-[600]">(less then 500kb.)</span>
           </label>
           <input
             type="file"

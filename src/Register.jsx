@@ -254,7 +254,7 @@ const Register = () => {
           </div>
           <div>
             <label className="block mb-1 text-gray-600" htmlFor="avatar">
-              Avatar <span className=" text-red-500 text-sm font-[600]">(less then 2mb.)</span>
+              Avatar <span className=" text-red-500 text-sm font-[600]">(less then 500kb.)</span>
             </label>
             <input
               type="file"

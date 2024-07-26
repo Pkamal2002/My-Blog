@@ -14,6 +14,7 @@ import BlogEditor from './BlogEditor.jsx';
 import OtpVerification from './OtpVerification.jsx';
 import AboutUs from './AboutUs.jsx';
 import BlogDetail from './BlogDetail.jsx';
+import BlogDashboard from './BlogDashboard.jsx';
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: '/blog-editor',
         element: <PrivateRoute element={<BlogEditor />} />,
+      },
+      {
+        path: '/blog-dashboard',
+        element: <PrivateRoute element={<BlogDashboard/>}/>,
       },
     ],
   },

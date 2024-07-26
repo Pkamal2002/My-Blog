@@ -1,16 +1,13 @@
 /* eslint-disable no-unused-vars */
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; // Import React Quill styles
+import SunEditor from "suneditor-react";
+import "suneditor/dist/css/suneditor.min.css"; // Import SunEditor styles
 
 const BlogEditor = () => {
-  const quillRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [imageUrl, setImageUrl] = useState("");
-
   const [blogData, setBlogData] = useState({
     title: "",
     content: "",
@@ -37,7 +34,6 @@ const BlogEditor = () => {
       );
       return response.data;
     },
-
     onSuccess: (data) => {
       toast.success("Blog created successfully!");
       setBlogData({ title: "", content: "", image: null });
@@ -97,16 +93,25 @@ const BlogEditor = () => {
           <label className="block text-gray-700 mb-2" htmlFor="content">
             Content
           </label>
-          <ReactQuill
-            ref={quillRef}
-            value={blogData.content}
+          <SunEditor
+            defaultValue={blogData.content}
             onChange={handleContentChange}
+            setOptions={{
+              buttonList: [
+                ["bold", "italic", "underline", "strike"],
+                ["fontColor", "hiliteColor", "align", "list", "link", "image"],
+                ["fontSize", "font", "formatBlock"],
+                ["table", "codeView", "preview", "fullScreen"],
+              ],
+              height: 200,
+            }}
             className="border border-gray-300 rounded-md"
           />
         </div>
         <div>
           <label className="block text-gray-700 mb-2" htmlFor="image">
-            Upload Image<span className=" text-red-500 text-sm font-[600]">(less then 500kb.)</span>
+            Upload Image
+            <span className="text-red-500 text-sm font-[600]">(less than 500kb)</span>
           </label>
           <input
             type="file"

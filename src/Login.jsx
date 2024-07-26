@@ -31,9 +31,9 @@ const Login = () => {
     onSuccess: (data) => {
       localStorage.setItem("token", data.data.accessToken);
       toast.success("Login successful!");
-      setUser({ username: data.data.username });
+      setUser({ username: data.data.user.fullname });
       login(); // Update the authentication state
-      navigate("/blog-editor");
+      navigate("/blog-dashboard");
     },
     onError: (error) => {
       toast.error(

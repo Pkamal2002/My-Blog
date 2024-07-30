@@ -1,24 +1,20 @@
 import { useState } from "react";
-import BlogCategories from "./BlogCatagoryComponents/BlogCategories";
-// import CreateBlog from "./BlogCatagoryComponents/CreateBlog";
-import DeleteBlog from "./BlogCatagoryComponents/DeleteBlog";
 import UpdateBlog from "./BlogCatagoryComponents/UpdateBlog";
 import UpdateUserDetails from "./BlogCatagoryComponents/UpdateUserDetails";
 import ChangeUserPassword from "./BlogCatagoryComponents/ChangeUserPassword";
 import BlogEditor from "./BlogEditor";
+import YourBlogs from "./BlogCatagoryComponents/YourBlogs";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("categories");
+  const [activeTab, setActiveTab] = useState("YourBlogs");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const renderContent = () => {
     switch (activeTab) {
-      case "categories":
-        return <BlogCategories />;
+      case "YourBlogs":
+        return <YourBlogs />;
       case "create":
         return <BlogEditor />;
-      case "delete":
-        return <DeleteBlog />;
       case "update":
         return <UpdateBlog />;
       case "updateDetails":
@@ -26,7 +22,7 @@ const Dashboard = () => {
       case "changePassword":
         return <ChangeUserPassword />;
       default:
-        return <BlogCategories />;
+        return <YourBlogs />;
     }
   };
 
@@ -38,7 +34,7 @@ const Dashboard = () => {
           <h1 className="text-xl font-semibold">Dashboard</h1>
         </div>
         <ul className="mt-4">
-          {["categories", "create", "delete", "update", "updateDetails", "changePassword"].map((tab) => (
+          {["Your Blogs", "create", "update", "updateDetails", "changePassword"].map((tab) => (
             <li key={tab}>
               <button
                 className={`block w-full text-left px-4 py-2 ${
@@ -72,7 +68,7 @@ const Dashboard = () => {
         style={{ transition: "transform 0.3s ease, opacity 0.3s ease" }}
       >
         <ul className="mt-4">
-          {["categories", "create", "delete", "update", "updateDetails", "changePassword"].map((tab) => (
+          {["YourBlogs", "create", "update", "updateDetails", "changePassword"].map((tab) => (
             <li key={tab}>
               <button
                 className={`block w-full text-left px-4 py-2 ${

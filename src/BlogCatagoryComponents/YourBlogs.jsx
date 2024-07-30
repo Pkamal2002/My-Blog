@@ -1,6 +1,8 @@
-import axios from "axios";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import toast, { Toaster } from "react-hot-toast";
+import  { useState } from 'react';
+import axios from 'axios';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast, { Toaster } from 'react-hot-toast';
+import ConfirmationDialog from './ConfirmationDialog'; // Import the custom dialog
 import Loading from "../Loading";
 
 const fetchBlogs = async () => {
@@ -57,6 +59,8 @@ const deleteBlog = async (blogId) => {
 
 const YourBlogs = () => {
   const queryClient = useQueryClient();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [blogToDelete, setBlogToDelete] = useState(null);
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["userBlogs"],
@@ -67,12 +71,13 @@ const YourBlogs = () => {
   });
 
   const { mutate: mutateDelete, isLoading: isDeleting } = useMutation({
-    mutationFn: deleteBlog, // Using mutationFn for deleteBlog
+    mutationFn: deleteBlog,
     onSuccess: (blogId) => {
       queryClient.setQueryData(["userBlogs"], (oldData) =>
         oldData.filter((blog) => blog._id !== blogId)
       );
       toast.success("Blog deleted successfully.");
+      setIsDialogOpen(false); // Close the dialog on success
     },
     onError: (error) => {
       toast.error(error.message);
@@ -80,12 +85,22 @@ const YourBlogs = () => {
   });
 
   const handleDelete = (blogId) => {
-    if (window.confirm("Are you sure you want to delete this blog?")) {
-      mutateDelete(blogId);
+    setBlogToDelete(blogId);
+    setIsDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (blogToDelete) {
+      mutateDelete(blogToDelete);
     }
   };
 
-  if (isLoading) return <p className="text-center"><Loading></Loading></p>;
+  const cancelDelete = () => {
+    setIsDialogOpen(false);
+    setBlogToDelete(null);
+  };
+
+  if (isLoading) return <p className="text-center"> <Loading/></p>;
   if (error) return <p className="text-center">{error.message}</p>;
 
   return (
@@ -97,14 +112,20 @@ const YourBlogs = () => {
           data.map((blog) => (
             <div
               key={blog._id}
-              className="bg-white p-4 max-h-[18rem] overflow-hidden rounded-lg shadow-lg flex flex-col"
+              className="bg-white p-4 max-h-[16rem] overflow-hidden rounded-lg shadow-lg flex flex-col"
             >
-              <h3 className="text-sm font-[600] overflow-hidden max-h-[3rem]  mb-2">{blog.title}</h3>
+              <h3 className="text-sm h-[6rem] overflow-hidden font-[600] mb-2">{blog.title}</h3>
               <img
                 src={blog.image}
                 alt={blog.title}
                 className="w-full max-h-[8rem] overflow-hidden mb-4 rounded"
               />
+              {/* <div className="flex-1">
+                <p
+                  className="text-gray-700"
+                  dangerouslySetInnerHTML={{ __html: blog.content }}
+                />
+              </div> */}
               <button
                 onClick={() => handleDelete(blog._id)}
                 disabled={isDeleting}
@@ -118,6 +139,13 @@ const YourBlogs = () => {
           <p className="col-span-full text-center">No blogs found.</p>
         )}
       </div>
+
+      <ConfirmationDialog
+        isOpen={isDialogOpen}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+        message="Are you sure you want to delete this blog?"
+      />
     </div>
   );
 };
